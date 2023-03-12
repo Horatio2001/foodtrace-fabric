@@ -1,0 +1,44 @@
+[
+    {
+        "transactionName": "FruitInfoExists",
+        "transactionLabel": "A test FruitInfoExists transaction",
+        "arguments": [
+            "001"
+        ],
+        "transientData": {}
+    },
+    {
+        "transactionName": "CreateFruitInfo",
+        "transactionLabel": "A test CreateFruitInfo transaction",
+        "arguments": [
+            "001",
+            "some value"
+        ],
+        "transientData": {}
+    },
+    {
+        "transactionName": "ReadFruitInfo",
+        "transactionLabel": "A test ReadFruitInfo transaction",
+        "arguments": [
+            "001"
+        ],
+        "transientData": {}
+    },
+    {
+        "transactionName": "UpdateFruitInfo",
+        "transactionLabel": "A test UpdateFruitInfo transaction",
+        "arguments": [
+            "001",
+            "some other value"
+        ],
+        "transientData": {}
+    },
+    {
+        "transactionName": "DeleteFruitInfo",
+        "transactionLabel": "A test DeleteFruitInfo transaction",
+        "arguments": [
+            "001"
+        ],
+        "transientData": {}
+    }
+]
