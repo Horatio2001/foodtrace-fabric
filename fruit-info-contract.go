@@ -35,10 +35,18 @@ func (c *FruitInfoContract) CreateFruitInfo(ctx contractapi.TransactionContextIn
 	} else if exists {
 		return fmt.Errorf("the asset %s already exists", fruitInfoID)
 	}
-
+	var collectInfo CollectInfo
+	var speciesInfo SpeciesInfo
+	var sourceInfo SourceInfo
+	var transportInfos []TransportInfo
 	fruitInfo := new(FruitInfo)
+	fruitInfo.ID = fruitInfoID
 	fruitInfo.ProcessInstanceID = processID
 	fruitInfo.CollectID = collectID
+	fruitInfo.CollectInfo = collectInfo
+	fruitInfo.SpeciesInfo = speciesInfo
+	fruitInfo.SourceInfo = sourceInfo
+	fruitInfo.TransportInfo = transportInfos
 
 	bytes, _ := json.Marshal(fruitInfo)
 
@@ -241,7 +249,7 @@ func (c *FruitInfoContract) ReadFruitInfoByRange(ctx contractapi.TransactionCont
 func (c *FruitInfoContract) ReadHistory(ctx contractapi.TransactionContextInterface, fruitInfoID string) ([]*FruitInfo, error) {
 	historyIterator, err := ctx.GetStub().GetHistoryForKey(fruitInfoID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("can not get history for key, %s", err)
 	}
 	defer func(historyIterator shim.HistoryQueryIteratorInterface) {
 		err := historyIterator.Close()
