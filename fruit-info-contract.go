@@ -31,14 +31,15 @@ func (c *FruitInfoContract) FruitInfoExists(ctx contractapi.TransactionContextIn
 func (c *FruitInfoContract) CreateFruitInfo(ctx contractapi.TransactionContextInterface, fruitInfoID string, processID string, collectID string) error {
 	exists, err := c.FruitInfoExists(ctx, fruitInfoID)
 	if err != nil {
-		return fmt.Errorf("could not read from world state. %s", err)
+		return fmt.Errorf("Could not read from world state. %s", err)
 	} else if exists {
-		return fmt.Errorf("the asset %s already exists", fruitInfoID)
+		return fmt.Errorf("The asset %s already exists", fruitInfoID)
 	}
 	var collectInfo CollectInfo
 	var speciesInfo SpeciesInfo
 	var sourceInfo SourceInfo
-	var transportInfos []TransportInfo
+	var transportInfo = TransportInfo{"暂无", "暂无", "暂无", "暂无", "暂无", "暂无", "暂无", "暂无"}
+	var transportInfos = []TransportInfo{transportInfo}
 	fruitInfo := new(FruitInfo)
 	fruitInfo.ID = fruitInfoID
 	fruitInfo.ProcessInstanceID = processID
@@ -60,9 +61,9 @@ func (c *FruitInfoContract) SetCollectInfo(ctx contractapi.TransactionContextInt
 	}
 	exists, err := c.FruitInfoExists(ctx, fruitInfoID)
 	if err != nil {
-		return fmt.Errorf("could not read from world state. %s", err)
+		return fmt.Errorf("Could not read from world state. %s", err)
 	} else if !exists {
-		return fmt.Errorf("the asset %s does not exist", fruitInfoID)
+		return fmt.Errorf("The asset %s does not exist", fruitInfoID)
 	}
 	var collectInfo CollectInfo
 	collectInfo.CollectPlaceLongitude = args[0]
@@ -168,9 +169,9 @@ func (c *FruitInfoContract) AddTransportInfo(ctx contractapi.TransactionContextI
 func (c *FruitInfoContract) UpdateProcessID(ctx contractapi.TransactionContextInterface, fruitInfoID string, processID string) error {
 	exists, err := c.FruitInfoExists(ctx, fruitInfoID)
 	if err != nil {
-		return fmt.Errorf("could not read from world state. %s", err)
+		return fmt.Errorf("Could not read from world state. %s", err)
 	} else if !exists {
-		return fmt.Errorf("the asset %s does not exist", fruitInfoID)
+		return fmt.Errorf("The asset %s does not exist", fruitInfoID)
 	}
 	fruitInfo := new(FruitInfo)
 	fruitInfo, _ = c.ReadFruitInfo(ctx, fruitInfoID)
@@ -183,9 +184,9 @@ func (c *FruitInfoContract) UpdateProcessID(ctx contractapi.TransactionContextIn
 func (c *FruitInfoContract) UpdateCollectID(ctx contractapi.TransactionContextInterface, fruitInfoID string, collectID string) error {
 	exists, err := c.FruitInfoExists(ctx, fruitInfoID)
 	if err != nil {
-		return fmt.Errorf("could not read from world state. %s", err)
+		return fmt.Errorf("Could not read from world state. %s", err)
 	} else if !exists {
-		return fmt.Errorf("the asset %s does not exist", fruitInfoID)
+		return fmt.Errorf("The asset %s does not exist", fruitInfoID)
 	}
 	fruitInfo := new(FruitInfo)
 	fruitInfo, _ = c.ReadFruitInfo(ctx, fruitInfoID)
@@ -198,9 +199,9 @@ func (c *FruitInfoContract) UpdateCollectID(ctx contractapi.TransactionContextIn
 func (c *FruitInfoContract) ReadFruitInfo(ctx contractapi.TransactionContextInterface, fruitInfoID string) (*FruitInfo, error) {
 	exists, err := c.FruitInfoExists(ctx, fruitInfoID)
 	if err != nil {
-		return nil, fmt.Errorf("could not read from world state. %s", err)
+		return nil, fmt.Errorf("Could not read from world state. %s", err)
 	} else if !exists {
-		return nil, fmt.Errorf("the asset %s does not exist", fruitInfoID)
+		return nil, fmt.Errorf("The asset %s does not exist", fruitInfoID)
 	}
 
 	bytes, _ := ctx.GetStub().GetState(fruitInfoID)
@@ -210,7 +211,7 @@ func (c *FruitInfoContract) ReadFruitInfo(ctx contractapi.TransactionContextInte
 	err = json.Unmarshal(bytes, fruitInfo)
 
 	if err != nil {
-		return nil, fmt.Errorf("could not unmarshal world state data to type FruitInfo")
+		return nil, fmt.Errorf("Could not unmarshal world state data to type FruitInfo")
 	}
 
 	return fruitInfo, nil
@@ -277,9 +278,9 @@ func (c *FruitInfoContract) ReadHistory(ctx contractapi.TransactionContextInterf
 func (c *FruitInfoContract) DeleteFruitInfo(ctx contractapi.TransactionContextInterface, fruitInfoID string) error {
 	exists, err := c.FruitInfoExists(ctx, fruitInfoID)
 	if err != nil {
-		return fmt.Errorf("could not read from world state. %s", err)
+		return fmt.Errorf("Could not read from world state. %s", err)
 	} else if !exists {
-		return fmt.Errorf("the asset %s does not exist", fruitInfoID)
+		return fmt.Errorf("The asset %s does not exist", fruitInfoID)
 	}
 
 	return ctx.GetStub().DelState(fruitInfoID)

@@ -56,9 +56,7 @@ func configureStub() (*MockContext, *MockStub) {
 	var nilBytes []byte
 
 	testFruitInfo := new(FruitInfo)
-	testFruitInfo.CollectID = "testCo0001"
-	testFruitInfo.ID = "testID0001"
-	testFruitInfo.ProcessInstanceID = "testPr0001"
+	testFruitInfo.ID = "set value"
 	fruitInfoBytes, _ := json.Marshal(testFruitInfo)
 
 	ms := new(MockStub)
@@ -97,6 +95,11 @@ func TestFruitInfoExists(t *testing.T) {
 
 func TestCreateFruitInfo(t *testing.T) {
 	var err error
+	var fruitInfo FruitInfo
+	fruitInfo.ID = "missingkey"
+	fruitInfo.CollectID = "some value"
+	fruitInfo.ProcessInstanceID = "some value"
+	bytes, _ := json.Marshal(fruitInfo)
 
 	ctx, stub := configureStub()
 	c := new(FruitInfoContract)
@@ -108,7 +111,7 @@ func TestCreateFruitInfo(t *testing.T) {
 	assert.EqualError(t, err, "The asset existingkey already exists", "should error when exists returns true")
 
 	err = c.CreateFruitInfo(ctx, "missingkey", "some value", "some value")
-	stub.AssertCalled(t, "PutState", "missingkey", []byte("{\"value\":\"some value\"}"))
+	stub.AssertCalled(t, "PutState", "missingkey", bytes)
 }
 
 func TestReadFruitInfo(t *testing.T) {
@@ -142,19 +145,22 @@ func TestFruitInfoContract_SetCollectInfo(t *testing.T) {
 
 	ctx, stub := configureStub()
 	c := new(FruitInfoContract)
-	var collectInfo = []string{"", "", "",
+	var collectString = []string{"", "", "",
+		"6", "4", "3", "horatio",
+		"中国热带农业科学院热带作物品种资源研究所", "2020-01-01T00:00:00.000Z", "null", ""}
+	var collectInfo = CollectInfo{"", "", "",
 		"6", "4", "3", "horatio",
 		"中国热带农业科学院热带作物品种资源研究所", "2020-01-01T00:00:00.000Z", "null", ""}
 
-	err = c.SetCollectInfo(ctx, "statebad", collectInfo)
+	err = c.SetCollectInfo(ctx, "statebad", collectString)
 	assert.EqualError(t, err, fmt.Sprintf("Could not read from world state. %s", getStateError), "should error when exists errors when updating")
 
-	err = c.SetCollectInfo(ctx, "missingkey", collectInfo)
+	err = c.SetCollectInfo(ctx, "missingkey", collectString)
 	assert.EqualError(t, err, "The asset missingkey does not exist", "should error when exists returns true when updating")
 
-	err = c.SetCollectInfo(ctx, "fruitInfokey", collectInfo)
+	err = c.SetCollectInfo(ctx, "fruitInfokey", collectString)
 	expectedFruitInfo := new(FruitInfo)
-	expectedFruitInfo.ID = "new value"
+	expectedFruitInfo.CollectInfo = collectInfo
 	expectedFruitInfoBytes, _ := json.Marshal(expectedFruitInfo)
 	assert.Nil(t, err, "should not return error when FruitInfo exists in world state when updating")
 	stub.AssertCalled(t, "PutState", "fruitInfokey", expectedFruitInfoBytes)
