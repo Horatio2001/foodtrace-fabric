@@ -233,7 +233,6 @@ func (c *FruitInfoContract) RejectSave(ctx contractapi.TransactionContextInterfa
 	fruitInfo.TxId = ctx.GetStub().GetTxID()
 
 	fruitInfo.IsContradict = "1"
-	fruitInfo.Status = "0"
 	bytes, _ := json.Marshal(fruitInfo)
 	return ctx.GetStub().PutState(fruitInfoID, bytes)
 }
@@ -343,7 +342,6 @@ func (c *FruitInfoContract) RejectEnter(ctx contractapi.TransactionContextInterf
 	//fruitInfo.TxId = ctx.GetStub().GetTxID()
 
 	fruitInfo.IsContradict = "1"
-	fruitInfo.Status = "1"
 	bytes, _ := json.Marshal(fruitInfo)
 	return ctx.GetStub().PutState(fruitInfoID, bytes)
 }
@@ -445,7 +443,6 @@ func (c *FruitInfoContract) RejectShare(ctx contractapi.TransactionContextInterf
 	//fruitInfo.TxId = ctx.GetStub().GetTxID()
 
 	fruitInfo.IsContradict = "1"
-	fruitInfo.Status = "2"
 	bytes, _ := json.Marshal(fruitInfo)
 	return ctx.GetStub().PutState(fruitInfoID, bytes)
 }
